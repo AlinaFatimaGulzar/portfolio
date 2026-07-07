@@ -1,1 +1,19 @@
-/* Base styles are in App.css */
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #07080C;
+  --color-surface: #12141B;
+  --color-border: #1E2130;
+  --color-border-glow: #2C3050;
+  --color-mint: #56E8C5;
+  --color-indigo: #7C8CFF;
+  --color-amber: #FFB454;
+  --color-green: #4ADE80;
+  --color-text: #F4F5F7;
+  --color-muted: #8A8F9E;
+  --color-faint: #3A3F52;
+
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
