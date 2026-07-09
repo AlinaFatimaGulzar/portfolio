@@ -1,13 +1,14 @@
-import { useEffect, useState, useRef } from "react";
-import { Github, Linkedin, X as XIcon, Menu } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { profile } from "../data/site";
 
 const navLinks = [
-  { label: "ABOUT", href: "#about" },
-  { label: "WORK", href: "#work" },
-  { label: "TOOLKIT", href: "#toolkit" },
-  { label: "PROCESS", href: "#process" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "Home", href: "#top" },
+  { label: "About", href: "#about" },
+  { label: "Services", href: "#services" },
+  { label: "Portfolio", href: "#work" },
+  { label: "Process", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Nav() {
@@ -15,100 +16,57 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    document.body.classList.toggle("menu-open", open);
-    return () => document.body.classList.remove("menu-open");
-  }, [open]);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+    document.body.classList.toggle("menu-open", open);
+    return () => document.body.classList.remove("menu-open");
+  }, [open]);
 
   return (
-    <>
-      <header
-        className={`fixed top-0 right-0 left-0 z-50 flex h-16 items-center justify-between px-6 transition-all duration-300 ${
-          scrolled ? "bg-[#07080C]/70 backdrop-blur-md" : "bg-transparent"
-        }`}
+    <header className={`site-nav ${scrolled ? "site-nav--scrolled" : ""}`}>
+      <a href="#top" className="brand-mark" aria-label={`${profile.name} home`}>
+        <span>{profile.initials.charAt(0)}</span>
+        {profile.initials.slice(1)}
+      </a>
+
+      <nav className="nav-links" aria-label="Main navigation">
+        {navLinks.map((link) => (
+          <a key={link.href} href={link.href}>
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <a className="nav-contact" href="#contact">
+        Contact Me
+      </a>
+
+      <button
+        className="menu-button"
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label={open ? "Close navigation" : "Open navigation"}
       >
-        <a href="#top" className="font-heading text-[15px] font-medium text-text">
-          <span className="bg-gradient-to-r from-mint to-indigo bg-clip-text text-transparent">
-            {profile.initials.charAt(0)}
-          </span>
-          {profile.initials.slice(1)}
-        </a>
-        <button
-          className="z-50 flex h-10 w-10 items-center justify-center text-text hover:text-mint transition-colors"
-          onClick={() => setOpen(true)}
-          type="button"
-          aria-label="Open navigation"
-        >
-          <Menu size={22} />
-        </button>
-      </header>
+        {open ? <X size={20} /> : <Menu size={20} />}
+      </button>
 
       {open && (
-        <div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
-          style={{
-            backgroundColor: "rgba(7, 8, 12, 0.98)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-          }}
-          onClick={() => setOpen(false)}
-        >
-          <button
-            className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-text transition-colors hover:border-mint hover:text-mint"
-            onClick={(e) => { e.stopPropagation(); setOpen(false); }}
-            type="button"
-            aria-label="Close navigation"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-
-          <nav className="flex flex-col items-center gap-3">
-            {navLinks.map((link, i) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-heading text-[48px] md:text-[64px] font-bold leading-none text-text transition-colors hover:text-mint"
-                onClick={() => setOpen(false)}
-                style={{ animation: `navFadeIn 0.4s ${i * 0.08}s both` }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          <div
-            className="absolute bottom-10 flex items-center gap-6"
-            style={{ animation: "navFadeIn 0.4s 0.4s both" }}
-          >
-            <a href="https://github.com/AlinaFatimaGulzar" className="text-muted transition-colors hover:text-mint">
-              <Github size={20} />
+        <div className="mobile-menu">
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+              {link.label}
             </a>
-            <a href="https://www.linkedin.com/in/alina-gulzar-a260452a" className="text-muted transition-colors hover:text-mint">
-              <Linkedin size={20} />
-            </a>
-            <a href="#" className="text-muted transition-colors hover:text-mint">
-              <XIcon size={20} />
-            </a>
-            <span className="font-mono text-[11px] text-muted">{profile.email}</span>
-          </div>
+          ))}
+          <a href={`mailto:${profile.email}`} onClick={() => setOpen(false)}>
+            {profile.email}
+          </a>
         </div>
       )}
-    </>
+    </header>
   );
 }

@@ -1,68 +1,90 @@
 import { motion } from "framer-motion";
+import { profile } from "../data/site";
 import { experience } from "../data/experience";
 import { projects } from "../data/projects";
 import ProjectCard from "./ProjectCard";
-import SectionHeader from "./SectionHeader";
 
-export function ExperienceSection() {
+const details = [
+  ["Name", profile.name],
+  ["Location", profile.city],
+  ["Experience", "1.5+ years"],
+  ["Freelance", "Available"],
+  ["Focus", "Flutter apps"],
+  ["Email", profile.email],
+];
+
+export function AboutSection() {
   return (
-    <section className="section !pt-24" id="experience">
-      <p className="font-mono text-xs font-semibold tracking-[0.15em] text-mint uppercase">
-        // EXPERIENCE
-      </p>
-      <h2 className="title !mb-12">Where I&apos;ve shipped real products</h2>
-      <div className="relative">
-        <svg className="absolute left-[19px] top-0 h-full w-[2px] md:left-1/2 md:-translate-x-1/2" style={{ pointerEvents: "none" }}>
-          <defs>
-            <linearGradient id="spineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#56E8C5" />
-              <stop offset="100%" stopColor="#7C8CFF" />
-            </linearGradient>
-          </defs>
-          <rect width="2" height="100%" fill="url(#spineGrad)" />
-        </svg>
-        <div className="space-y-6">
-          {experience.map((item, i) => (
-            <motion.article
-              className={`relative ml-10 rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-border-glow hover:shadow-[0_16px_48px_rgba(86,232,197,0.08)] md:ml-0 md:w-[calc(50%-24px)] ${
-                i % 2 === 0 ? "md:mr-auto" : "md:ml-auto"
-              }`}
-              key={`${item.company}-${item.role}`}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <div className="absolute top-6 -left-[42px] h-[10px] w-[10px] rounded-full bg-mint shadow-[0_0_0_4px_rgba(86,232,197,0.19)] md:-left-[17px]" />
-              <div className="font-mono text-[11px] font-semibold tracking-wider text-muted uppercase">{item.period}</div>
-              <h3 className="mt-2 font-heading text-lg font-semibold text-text">{item.role}</h3>
-              <p className="font-body text-sm text-muted">{item.company}</p>
-              <p className="mt-2 font-body text-sm leading-relaxed text-muted/80">{item.description}</p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {item.tech.map((t) => (
-                  <span key={t} className="rounded-full border border-border px-2.5 py-0.5 font-mono text-[10px] text-muted">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </motion.article>
+    <section className="section section-grid" id="about">
+      <div className="section-media">
+        <img src="/profile%20picture.png" alt={profile.name} />
+      </div>
+
+      <div className="section-copy">
+        <p className="eyebrow">Discover</p>
+        <h2 className="section-title">About Me</h2>
+        <p className="section-lead">{profile.intro}</p>
+
+        <div className="info-panel">
+          {details.map(([label, value]) => (
+            <div key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </div>
           ))}
         </div>
+
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <a className="btn btn-primary" href="https://drive.google.com/file/d/1UU0BT-tM45U8u190oppq0ku_POlEcTv8/view?usp=sharing">
+            Download CV
+          </a>
+          <a className="btn btn-outline" href="/Certificate.pdf" target="_blank">
+            Certificate
+          </a>
+        </div>
       </div>
+
+      <span className="section-number">01</span>
     </section>
   );
 }
 
+export function ExperienceSection() {
+  return <AboutSection />;
+}
+
 export function WorkSection() {
   return (
-    <section className="section !pt-24" id="work">
-      <p className="font-mono text-xs font-semibold tracking-[0.15em] text-mint uppercase">
-        // SELECTED WORK
-      </p>
-      <h2 className="title !mb-12">Apps shipped. Products people use.</h2>
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-        {projects.map((project, i) => (
-          <ProjectCard key={project.title} project={project} index={i} />
+    <section className="section" id="work">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Selected Work</p>
+          <h2 className="section-title">Portfolio</h2>
+        </div>
+        <p>
+          A focused sample of mobile and web product work shaped around fast UX,
+          maintainable Flutter structure, and launch-ready execution.
+        </p>
+      </div>
+
+      <div className="portfolio-grid">
+        {projects.map((project, index) => (
+          <ProjectCard key={project.title} project={project} index={index} />
+        ))}
+      </div>
+
+      <div className="resume-strip">
+        {experience.map((item) => (
+          <motion.article
+            key={`${item.company}-${item.role}`}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span>{item.period}</span>
+            <h3>{item.role}</h3>
+            <p>{item.company}</p>
+          </motion.article>
         ))}
       </div>
     </section>
